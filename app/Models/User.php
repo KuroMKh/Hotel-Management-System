@@ -9,7 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable {
+class User extends Authenticatable
+{
 
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -19,7 +20,13 @@ class User extends Authenticatable {
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password', 'last_name', 'phone', 'is_admin'
+        'google_id',
+        'name',
+        'email',
+        'password',
+        'last_name',
+        'phone',
+        'is_admin'
     ];
 
     /**
@@ -42,7 +49,8 @@ class User extends Authenticatable {
         'is_admin' => 'boolean'
     ];
 
-    public function orders(): HasMany {
+    public function orders(): HasMany
+    {
 
         return $this->hasMany(Order::class, 'user_id', 'id');
     }

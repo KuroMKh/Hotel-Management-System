@@ -5,7 +5,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\SetPasswordController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
@@ -44,6 +45,13 @@ Route::controller(AuthController::class)->group(function () {
 
     Route::post('logout', 'logout')->name('logout');
 });
+/************************************
+ *              Google
+ ************************************/
+Route::get("auth/google", [GoogleController::class, "redirectToGoogle"])->name("redirect.google");
+Route::get("auth/google/callback", [GoogleController::class, "handleGoogleCallback"]);
+Route::post('/set-password', [SetPasswordController::class, 'UpdatePassword'])->name('password.set');
+
 
 /************************************
  *              Admin

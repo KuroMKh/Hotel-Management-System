@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
 
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
@@ -25,14 +27,16 @@ class AuthController extends Controller {
     /**
      * Display the login view.
      */
-    public function showLoginForm(): View {
+    public function showLoginForm(): View
+    {
         return view('auth.login');
     }
 
     /**
      * Display the registration view.
      */
-    public function showRegistrationForm(): View {
+    public function showRegistrationForm(): View
+    {
         return view('auth.register');
     }
 
@@ -41,25 +45,28 @@ class AuthController extends Controller {
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function register(Request $request): RedirectResponse {
+    public function register(Request $request): RedirectResponse
+    {
 
         $request->validate([
             'name' => ['required', new AlphaSpace, 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required',
+            'password' => [
+                'required',
                 Password::min(6)
                     ->letters()     // Require at least one letter
                     ->mixedCase()   // Require at least one uppercase and one lowercase letter
                     ->numbers()     // Require at least one number
                     ->symbols(),    // Require at least one symbol
-                'confirmed'],
+                'confirmed'
+            ],
             'password_confirmation' => ['required']
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $request->getName(),
+            'email' => $request->getEmail(),
+            'password' => Hash::make($request->getPassword()),
         ]);
 
         Auth::login($user);
@@ -70,7 +77,8 @@ class AuthController extends Controller {
     /**
      * Handle an authentication attempt.
      */
-    public function login(Request $request): RedirectResponse {
+    public function login(Request $request): RedirectResponse
+    {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -95,7 +103,8 @@ class AuthController extends Controller {
     /**
      * Destroy an authenticated session.
      */
-    public function logout(Request $request): RedirectResponse {
+    public function logout(Request $request): RedirectResponse
+    {
 
         Auth::logout();
         $request->session()->invalidate();
